@@ -1,4 +1,4 @@
-import { IGeoPos } from "types";
+import { IGeoPos } from "../../types";
 import { degreesToRadians } from "./degreesToRadians";
 import { lengthToRadians } from "./lengthToRadians";
 import { radiansToDegrees } from "./radiansToDegrees";

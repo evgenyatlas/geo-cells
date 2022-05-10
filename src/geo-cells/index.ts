@@ -1,9 +1,9 @@
-import { getAngle } from "lib/getAngle"
-import { magnitude } from "lib/magnitute"
-import { distance } from "lib/geo/distance"
-import { IUnit } from "lib/geo/units"
-import { move } from "lib/geo/move"
-import { IGeoPos, IVector2 } from "types"
+import { getAngle } from "../lib/getAngle"
+import { magnitude } from "../lib/magnitute"
+import { distance } from "../lib/geo/distance"
+import { IUnit } from "../lib/geo/units"
+import { move } from "../lib/geo/move"
+import { IGeoPos, IVector2 } from "../types"
 import squareGrid from '@turf/square-grid'
 
 export class GeoCells {
@@ -60,3 +60,6 @@ export class GeoCells {
         return grid
     }
 }
+
+const geoCells = new GeoCells(100, { lng: 30.25338649749756, lat: 60.01357456707032 })
+console.log(geoCells.gridDebug())

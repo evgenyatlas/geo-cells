@@ -1,4 +1,4 @@
-const earthRadius = 6371008.8;
+const earthRadius = 6371008.8
 
 export const units = {
     meters: earthRadius,
