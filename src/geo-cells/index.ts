@@ -7,44 +7,46 @@ import { IGeoPos, IVector2 } from "types"
 import squareGrid from '@turf/square-grid'
 
 export class GeoCells {
-    private unit: IUnit
     constructor(
-        //метры
+        //cell size based on unit
         private cellSize: number,
         private startPos: IGeoPos,
-        typeDist: IUnit = 'meters'
+        private unit: IUnit = 'meters'
     ) {
-        this.unit = typeDist as IUnit
     }
-    //Переводим ячейку в позицию
+    /**
+     * transform cell to geo pos
+     */
     cellToPos(cell: IVector2): IGeoPos {
-        //Дистанция по x,y в метрах
         const cellDist: IVector2 = {
             x: cell.x * this.cellSize,
             y: cell.y * this.cellSize
         }
 
-        //Двигаем на необходимую позицию исходя из
+        //Move to the required position based on:
         const pos = move(
-            //Стартовой позиции сетки
+            //Grid starting position
             this.startPos,
-            //Расстояния от стартовой позиции до конечной точки
+            //Distances from start position to end point
             magnitude(cellDist),
-            //Угол поворота от стартовой позиции до конечной точки
+            //Rotation angle from start position to end point
             90 - getAngle(cellDist),
             this.unit
         )
 
         return pos
     }
+    /**
+    * transform geo pos to cell
+    */
     posToCell(pos: IGeoPos): IVector2 {
-        //Дистанция (в метрах) по X (от startPos)
+        //Distance from start position to pos.lng
         const xDist = distance(this.startPos, { lng: pos.lng, lat: this.startPos.lat }, this.unit)
-        //Дистанция (в метрах) по Y (от startPos)
+        //Distance from start position to pos.lat
         const yDist = distance(this.startPos, { lng: this.startPos.lng, lat: pos.lat }, this.unit)
 
+        //Distance / cell size = x,y
         return {
-            //Дистанция / размер ячейки = x,y
             x: Math.round(xDist / this.cellSize),
             y: Math.round(yDist / this.cellSize)
         }
