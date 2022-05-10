@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "declaration": true,
+        "outDir": "./dist",
+        "baseUrl": "./src",
+        "strict": true,
+        "noImplicitAny": false
+    },
+    "include": [
+        "src",
+        "src/index.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/__tests__/*"
+    ]
+}

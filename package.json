@@ -1,0 +1,19 @@
+{
+  "name": "geo-cells",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --ext js,ts,json,env --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/square-grid": "^6.5.0",
+    "save-dev": "^0.0.1-security",
+    "ts-node": "^10.7.0"
+  }
+}
