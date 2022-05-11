@@ -60,6 +60,3 @@ export class GeoCells {
         return grid
     }
 }
-
-const geoCells = new GeoCells(100, { lng: 30.25338649749756, lat: 60.01357456707032 })
-console.log(geoCells.gridDebug())
