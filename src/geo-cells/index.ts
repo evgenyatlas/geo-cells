@@ -3,25 +3,54 @@ import { magnitude } from "../lib/magnitute"
 import { distance } from "../lib/geo/distance"
 import { IUnit } from "../lib/geo/units"
 import { move } from "../lib/geo/move"
-import { IGeoPos, IVector2 } from "../types"
+import { BBox, IGeoPos, IVector2, Vector2 } from "../types"
 import squareGrid from '@turf/square-grid'
 
 export class GeoCells {
+
+    private bbox: BBox
+    public get bboxs(): BBox {
+        return this.bbox
+    }
+
+    private cellSize: number
+    private typeDist: IUnit
+
+    private _width: number
+    get width(): number {
+        return this._width
+    }
+    private _height: number
+    public get height(): number {
+        return this._height
+    }
+
+    get startPos(): IGeoPos {
+        return { lng: this.bbox[0], lat: this.bbox[1] }
+    }
+    get endPos(): IGeoPos {
+        return { lng: this.bbox[2], lat: this.bbox[3] }
+    }
+
     constructor(
-        //cell size based on unit
-        private cellSize: number,
-        private startPos: IGeoPos,
-        private unit: IUnit = 'meters'
+        bbox: BBox,
+        cellSize: number,
+        typeDist: IUnit = 'meters'
     ) {
+        this.bbox = bbox
+        this.cellSize = cellSize
+        this.typeDist = typeDist as IUnit
+        this._width = Math.ceil(distance({ lng: bbox[0], lat: bbox[1] }, { lng: bbox[2], lat: bbox[1] }, this.typeDist) / cellSize + cellSize)
+        this._height = Math.ceil(distance({ lng: bbox[0], lat: bbox[1] }, { lng: bbox[0], lat: bbox[3] }, this.typeDist) / cellSize + cellSize)
     }
     /**
      * transform cell to geo pos
      */
-    cellToPos(cell: IVector2): IGeoPos {
-        const cellDist: IVector2 = {
-            x: cell.x * this.cellSize,
-            y: cell.y * this.cellSize
-        }
+    cellToPos(cell: Vector2): IGeoPos {
+        const cellDist: Vector2 = [
+            cell[0] * this.cellSize,
+            cell[1] * this.cellSize
+        ]
 
         //Move to the required position based on:
         const pos = move(
@@ -31,7 +60,7 @@ export class GeoCells {
             magnitude(cellDist),
             //Rotation angle from start position to end point
             90 - getAngle(cellDist),
-            this.unit
+            this.typeDist
         )
 
         return pos
@@ -39,24 +68,16 @@ export class GeoCells {
     /**
     * transform geo pos to cell
     */
-    posToCell(pos: IGeoPos): IVector2 {
+    posToCell(pos: IGeoPos): Vector2 {
         //Distance from start position to pos.lng
-        const xDist = distance(this.startPos, { lng: pos.lng, lat: this.startPos.lat }, this.unit)
+        const xDist = distance(this.startPos, { lng: pos.lng, lat: this.startPos.lat }, this.typeDist)
         //Distance from start position to pos.lat
-        const yDist = distance(this.startPos, { lng: this.startPos.lng, lat: pos.lat }, this.unit)
+        const yDist = distance(this.startPos, { lng: this.startPos.lng, lat: pos.lat }, this.typeDist)
 
-        //Distance / cell size = x,y
-        return {
-            x: Math.round(xDist / this.cellSize),
-            y: Math.round(yDist / this.cellSize)
-        }
-    }
-    gridDebug() {
-        const bbox = [this.startPos.lng, this.startPos.lat, 30.2708101272583, 60.02500483633538]
-        const grid = squareGrid(bbox as [number, number, number, number], this.cellSize, {
-            units: this.unit
-        })
-
-        return grid
+        return [
+            //Distance / cell size = x,y
+            Math.round(xDist / this.cellSize),
+            Math.round(yDist / this.cellSize)
+        ]
     }
 }

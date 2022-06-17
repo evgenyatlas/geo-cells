@@ -1,5 +1,5 @@
-import { IVector2 } from "../types"
+import { IVector2, Vector2 } from "../types"
 
-export function getAngle(v: IVector2) {
-    return Math.atan2(v.y, v.x) / Math.PI * 180
+export function getAngle(v: Vector2) {
+    return Math.atan2(v[0], v[1]) / Math.PI * 180
 }
